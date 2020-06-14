@@ -1,14 +1,15 @@
 import express, { Express, Request, Response } from "express";
 import { config } from "dotenv";
-import connection from "../database";
 import { Routes } from "../routes";
-import * as bodyParser from "body-parser";
+import connection from "../database";
 import chalk from "chalk";
+import * as bodyParser from "body-parser";
 
 export class Server {
   static bootstrap() {
+    const { log } = console;
+
     try {
-      const { log } = console;
       connection(); // CONNECTION WITH TYPEORM
       config(); // CONFIG ENVS
       log(chalk.green(`STORAGE - Database init`));
@@ -21,10 +22,12 @@ export class Server {
       Routes.map((route) => {
         app[route.method](
           route.path,
-          route.middleawre !== undefined
+          route.middlewares !== undefined
             ? (request: Request, response: Response, next: Function) => {
-                if (route.middleawre !== undefined) {
-                  route.middleawre(request, response, next);
+                if (route.middlewares !== undefined) {
+                  route.middlewares.map((middleware) => {
+                    middleware(request, response, next);
+                  });
                 }
               }
             : (request: Request, response: Response, next: Function) => next(),
@@ -48,8 +51,8 @@ export class Server {
       app.listen(PORT_SERVER);
       log(chalk.green(`SERVER  - Server running in port ${PORT_SERVER}`));
     } catch (error) {
-      console.log(error);
-      console.error("Server not initial");
+      log(chalk.red(error));
+      log(chalk.red("Server not initial"));
     }
   }
 }

@@ -6,19 +6,19 @@ interface IRouter {
   path: string;
   method: HTTP_METHODS;
   action: Function;
-  middleawre?: Function;
+  middlewares?: Array<Function>;
 }
 
 export const Routes: IRouter[] = [
   {
-    path: "/user",
+    path: "/user/:id",
     method: HTTP_METHODS.GET,
-    action: new UserController().getAll,
+    action: new UserController().index,
   },
   {
     path: "/user",
     method: HTTP_METHODS.POST,
     action: new UserController().create,
-    middleawre: new UserMiddleware().createUser,
+    middlewares: [new UserMiddleware().createUser],
   },
 ];

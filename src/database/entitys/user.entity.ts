@@ -7,6 +7,9 @@ export class UserEntity extends MainEntity {
     super();
   }
   @Column({ nullable: false, type: "character varying" })
+  name?: string;
+
+  @Column({ nullable: false, type: "character varying", unique: true })
   email?: string;
 
   @Column({ nullable: false, type: "character varying" })

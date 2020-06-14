@@ -13,8 +13,8 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 export abstract class MainEntity {
   constructor() {}
 
-  @PrimaryGeneratedColumn("uuid")
-  public id?: string;
+  @PrimaryGeneratedColumn()
+  public id!: string;
 
   @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
   protected createdIn?: string;
