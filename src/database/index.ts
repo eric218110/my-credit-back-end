@@ -7,11 +7,11 @@ import { config } from "dotenv";
 import { resolve } from "path";
 
 class ConnectionFactory {
-  createConnection() {
+  async createConnection() {
     config();
     const { HOST, USER, PASSWORD, DATABASE, PORT_DATABASE, MODE } = process.env;
     try {
-      createConnectionTypeORM({
+      const connection = await createConnectionTypeORM({
         type: "postgres",
         host: HOST,
         username: USER,
@@ -22,6 +22,7 @@ class ConnectionFactory {
         migrationsRun: MODE === "dev" ? true : false,
         entities: [resolve(__dirname, ".", "entitys", "*.entity{.ts,.js}")],
       });
+      
     } catch (error) {
       console.log("not Connected database - " + error);
       throw "Not connected database";
