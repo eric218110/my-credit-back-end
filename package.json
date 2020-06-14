@@ -6,7 +6,11 @@
   "author": "Eric Silva",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev src/server"
+    "prebuild": "rimraf dist",
+    "build": "tsc --build",
+    "dev": "ts-node-dev src/server",
+    "start": "ts-node src/server",
+    "prodution": "node dist/server"
   },
   "dependencies": {
     "chalk": "^4.1.0",
