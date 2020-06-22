@@ -3,8 +3,9 @@ import { userService } from "../../services/UserServices";
 import { UserEntity } from "../../database/entitys/user.entity";
 export class UserController {
   async index(request: Request, response: Response) {
-    console.log(request.params.id);
-    response.send("Boraa");
+    const { id } = request.params;
+    await userService.index({ id });
+    return response.json(request.body);
   }
 
   async create(request: Request, response: Response) {

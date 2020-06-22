@@ -1,6 +1,4 @@
-import { Response } from "express";
-
-interface IErro {
+export interface IErrorValidator {
   message: string;
   fieldName: string;
   validation?: string;
@@ -12,8 +10,8 @@ interface IFielder {
 }
 
 export class Validate {
-  static isEmpty(fields: Array<IFielder>, response: Response) {
-    const errors: Array<IErro> = [];
+  static isEmpty(fields: Array<IFielder>): Array<IErrorValidator> | true {
+    const errors: Array<IErrorValidator> = [];
     fields.map(({ field, fieldName }) => {
       if (field === "" || field === undefined) {
         errors.push({
@@ -25,54 +23,53 @@ export class Validate {
     });
 
     if (errors.length > 0) {
-      return response.status(401).json({
-        errors,
-      });
+      return errors;
     }
+    return true;
   }
 
-  static isEquals(fielder: IFielder, comparefield: string, response: Response) {
+  static isEquals(
+    fielder: IFielder,
+    comparefield: string
+  ): IErrorValidator | true {
     const { field, fieldName } = fielder;
 
     if (field !== comparefield) {
-      const error: IErro = {
+      const error: IErrorValidator = {
         fieldName,
         message: `Filder (${fieldName}) are not same`,
         validation: "Is equals",
       };
-      return response.status(401).json(error);
+      return error;
     }
+    return true;
   }
   static isMinMax(
     fielder: IFielder,
-    maxMin: { min: number; max: number },
-    response: Response
-  ) {
+    maxMin: { min: number; max: number }
+  ): IErrorValidator | true {
     const { field, fieldName } = fielder;
     const { max, min } = maxMin;
 
     if (field.length > max) {
-      const error: IErro = {
+      const error: IErrorValidator = {
         fieldName,
         message: `Larger field (${fieldName}) than supported`,
         validation: "Max supported",
       };
-      return response.status(401).json({
-        error,
-      });
+      return error;
     }
     if (field.length < min) {
-      const error: IErro = {
+      const error: IErrorValidator = {
         fieldName,
         message: `Smaller field (${fieldName}) than supported`,
         validation: "Smaller supported",
       };
-      return response.status(401).json({
-        error,
-      });
+      return error;
     }
+    return true;
   }
-  static isEmail(fielder: IFielder, response: Response) {
+  static isEmail(fielder: IFielder): IErrorValidator | true {
     const { field, fieldName } = fielder;
     const userEmail = field.substring(0, field.indexOf("@"));
     const domainEmail = field.substring(field.indexOf("@") + 1, field.length);
@@ -89,14 +86,13 @@ export class Validate {
       domainEmail.lastIndexOf(".") < domainEmail.length - 1
     ) {
     } else {
-      const error: IErro = {
+      const error: IErrorValidator = {
         fieldName,
         message: `Email (${field}) invalid`,
         validation: "Email invalid",
       };
-      return response.status(401).json({
-        error,
-      });
+      return error;
     }
+    return true;
   }
 }
