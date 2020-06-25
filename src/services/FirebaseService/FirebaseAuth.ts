@@ -7,7 +7,7 @@ class FirebaseAuth {
 
     firebaseAuth
       .getUserByEmail(email)
-      .then((userRecord) => console.log(userRecord))
+      .then((userRecord) => userRecord.providerData)
       .catch((error) => console.log(error));
   }
 
@@ -15,22 +15,23 @@ class FirebaseAuth {
     email: string;
     displayName: string;
     password: string;
+    photoURL: string;
   }): Promise<boolean | string> {
     const firebaseAuth = MyFirebaseApplication.getInstance().auth();
-    const { email, displayName, password } = User;
+    const { email, displayName, password, photoURL } = User;
 
     const user = firebaseAuth
       .createUser({
         email,
         displayName,
         password,
+        photoURL,
       })
       .then((userRecord) => userRecord.uid)
       .catch((error: FirebaseError) => {
         console.log(error.message);
         return false;
       });
-
     return user;
   }
 }

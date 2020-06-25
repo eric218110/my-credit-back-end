@@ -1,7 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 import { UserEntity } from "../../database/entitys/user.entity";
 import { firebaseAuth } from "../FirebaseService/FirebaseAuth";
-import { auth } from "firebase-admin";
 
 class UserService {
   private userRepository!: Repository<UserEntity>;
@@ -32,15 +31,28 @@ class UserService {
       email: user.email,
       displayName: user.name,
       password: user.password,
-
+      photoURL: user.photoURL
     });
 
     if (userFirebase) {
       user.uid = userFirebase.toString();
       return await this.userRepository.save(user);
     }else{
-      throw new Error('The email address is already in use by another account./')
+      throw new Error('The email address is already in use by another account.')
     }
+  }
+
+  async findByEmail(find: { email: string }): Promise<UserEntity | undefined> {
+    const { email } = find;
+    this.singletonRepository();
+    return await this.userRepository
+      .findOne({ email })
+      .then((userEntity: UserEntity | undefined) => {
+        if (userEntity !== undefined) {
+          firebaseAuth.getUserByEmail(email);
+        }
+        return userEntity;
+      });
   }
 }
 

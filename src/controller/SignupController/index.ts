@@ -1,6 +1,6 @@
 // CADASTRA NOVO USUÁRIO
 
-import { Response } from "express";
+import { Response, Request } from "express";
 
 class SignupController {
   constructor() {}

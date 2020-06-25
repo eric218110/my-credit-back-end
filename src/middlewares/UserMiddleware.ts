@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { Validate, IErrorValidator } from "../common/Validate";
-import md5 from "md5";
+import bcryptjs from "bcryptjs";
 export class UserMiddleware {
   private errors: Array<IErrorValidator> = [];
 
-  createUser(request: Request, response: Response, next: NextFunction) {
+  async createUser(request: Request, response: Response, next: NextFunction) {
     const errors: Array<IErrorValidator> = [];
     try {
       const name: string = request.body.name;
@@ -47,13 +47,59 @@ export class UserMiddleware {
         return response.json({ validationErros: errors });
       } else {
         // HASH PASSWORD
-        request.body.password = md5(password);
+        const hash = await bcryptjs.hash(password, 10);
+
+        request.body.password = hash;
         next();
       }
     } catch (error) {
       console.log(error);
       return response.status(401).json({
         error: "Erro request",
+      });
+    }
+  }
+
+  async createUserWithFacebook(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const errors: Array<IErrorValidator> = [];
+    try {
+      const name: string = request.body.name;
+      const email: string = request.body.email;
+      const password: string = `${name
+        .trim()
+        .replace(" ", "")
+        .toLocaleLowerCase()}::${email}`;
+
+      const isEmpty = Validate.isEmpty([
+        { field: name, fieldName: "name" },
+        { field: email, fieldName: "email" },
+      ]);
+      if (isEmpty !== true) {
+        isEmpty.map((error: IErrorValidator) => errors.push(error));
+      }
+
+      const isEmail = Validate.isEmail({ field: email, fieldName: "email" });
+      if (isEmail !== true) {
+        errors.push(isEmail);
+      }
+
+      if (errors.length > 0) {
+        return response.json({ validationErros: errors });
+      } else {
+        // HASH PASSWORD
+        const hash = await bcryptjs.hash(password, 10);
+
+        request.body.password = hash;
+        next();
+      }
+    } catch (error) {
+      console.log(error);
+      return response.status(401).json({
+        error: "Not create",
       });
     }
   }
