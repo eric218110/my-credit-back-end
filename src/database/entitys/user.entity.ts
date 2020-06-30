@@ -7,11 +7,20 @@ export class UserEntity extends MainEntity {
     super();
   }
   @Column({ nullable: false, type: "character varying" })
-  name?: string;
-
-  @Column({ nullable: false, type: "character varying", unique: true })
-  email?: string;
+  uid!: string;
 
   @Column({ nullable: false, type: "character varying" })
-  password?: string;
+  name!: string;
+
+  @Column({ nullable: false, type: "character varying", unique: true })
+  email!: string;
+
+  @Column({ nullable: false, type: "character varying" })
+  password!: string;
+
+  @Column({nullable: true, type:'character varying'})
+  photoURL!: string;
+
+  @Column({nullable: false, type:'character varying'})
+  token!: string;
 }

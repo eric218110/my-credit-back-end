@@ -4,6 +4,7 @@ import { Routes } from "../routes";
 import connection from "../database";
 import chalk from "chalk";
 import * as bodyParser from "body-parser";
+import cors from "cors";
 
 export class Server {
   static bootstrap() {
@@ -17,7 +18,12 @@ export class Server {
       const app: Express = express();
 
       app.use(bodyParser.json());
-
+      app.use(
+        cors({
+          allowedHeaders: "Access-Control-Allow-Headers",
+          methods: "Access-Control-Allow-Methods",
+        })
+      );
       // ROUTES APP, MIDDLEWARES
       Routes.map((route) => {
         app[route.method](

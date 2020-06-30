@@ -34,7 +34,7 @@ $ yarn prodution
 ## Equipe
 
 * #### [Eric Silva](https://github.com/eric218110/)
-* #### [Amanda](https://github.com/AmandaLigia08)
+* #### [Matthaus](https://github.com/Matthausstefhen)
 
 ## Professor
 
