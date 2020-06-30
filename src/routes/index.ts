@@ -2,6 +2,8 @@ import { HTTP_METHODS } from "../constants";
 import { UserController } from "../controller/UserController";
 import { UserMiddleware } from "../middlewares/UserMiddleware";
 import { AuthController } from "../controller/AuthController";
+import { CardController } from "../controller/CardController";
+import { CardMiddleware } from "../middlewares/CardMiddleware";
 interface IRouter {
   path: string;
   method: HTTP_METHODS;
@@ -28,6 +30,17 @@ export const Routes: IRouter[] = [
     path: "/auth/facebook",
     method: HTTP_METHODS.POST,
     action: new AuthController().authFacebook,
-    middlewares: [userMiddleware.createUserWithFacebook]
+    middlewares: [userMiddleware.createUserWithFacebook],
+  },
+  {
+    path: "/card",
+    method: HTTP_METHODS.GET,
+    action: new CardController().show,
+  },
+  {
+    path: "/card",
+    method: HTTP_METHODS.POST,
+    action: new CardController().create,
+    middlewares: [new CardMiddleware().create],
   },
 ];

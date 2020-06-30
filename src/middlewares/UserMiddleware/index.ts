@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Validate, IErrorValidator } from "../common/Validate";
+import { Validate, IErrorValidator } from "../../common/Validate";
 import bcryptjs from "bcryptjs";
 export class UserMiddleware {
   private errors: Array<IErrorValidator> = [];

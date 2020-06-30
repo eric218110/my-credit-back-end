@@ -29,6 +29,7 @@ export class AuthController {
     const userCreate = await userController.createUserWithFacebook(user);
 
     return response.json({
+      id: user.id,
       email: userCreate.email,
       name: userCreate.name,
       photoURL: userCreate.photoURL,
