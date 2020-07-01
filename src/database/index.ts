@@ -9,12 +9,12 @@ import { resolve } from "path";
 class ConnectionFactory {
   async createConnection() {
     config();
-    const { HOST, USER, PASSWORD, DATABASE, PORT_DATABASE, MODE } = process.env;
+    const { HOST, USERDATABASE, PASSWORD, DATABASE, PORT_DATABASE, MODE } = process.env;
     try {
-      const connection = await createConnectionTypeORM({
+      await createConnectionTypeORM({
         type: "postgres",
         host: HOST,
-        username: USER,
+        username: USERDATABASE,
         password: PASSWORD,
         database: DATABASE,
         port: Number(PORT_DATABASE),
