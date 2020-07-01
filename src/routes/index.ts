@@ -4,6 +4,7 @@ import { UserMiddleware } from "../middlewares/UserMiddleware";
 import { AuthController } from "../controller/AuthController";
 import { CardController } from "../controller/CardController";
 import { CardMiddleware } from "../middlewares/CardMiddleware";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 interface IRouter {
   path: string;
   method: HTTP_METHODS;
@@ -27,15 +28,28 @@ export const Routes: IRouter[] = [
     middlewares: [userMiddleware.createUser],
   },
   {
+    path: "/user/firebase",
+    method: HTTP_METHODS.POST,
+    action: new UserController().createUserInFirebase,
+    middlewares: [userMiddleware.createUser],
+  },
+  {
     path: "/auth/facebook",
     method: HTTP_METHODS.POST,
     action: new AuthController().authFacebook,
     middlewares: [userMiddleware.createUserWithFacebook],
   },
   {
+    path: "/auth/email",
+    method: HTTP_METHODS.POST,
+    action: new AuthController().authEmailAndPassword,
+    middlewares: [new AuthMiddleware().signWithEmailAndPassword],
+  },
+  {
     path: "/card",
     method: HTTP_METHODS.GET,
     action: new CardController().show,
+    middlewares: [new AuthMiddleware().isAuthenticate],
   },
   {
     path: "/card",

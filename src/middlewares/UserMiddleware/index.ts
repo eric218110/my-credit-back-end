@@ -106,9 +106,17 @@ export class UserMiddleware {
 
   findOneUser(request: Request, response: Response, next: NextFunction) {
     const id: string = request.params.id;
+    const errors: Array<IErrorValidator> = [];
+    const isEmpty = Validate.isEmpty([{ field: id, fieldName: "id" }]);
 
-    Validate.isEmpty([{ field: id, fieldName: "id" }]);
+    if (isEmpty !== true) {
+      isEmpty.map((error: IErrorValidator) => errors.push(error));
+    }
 
-    next();
+    if (errors.length > 0) {
+      return response.json({ validationErros: errors });
+    } else {
+      next();
+    }
   }
 }
