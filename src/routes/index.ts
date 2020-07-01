@@ -13,25 +13,33 @@ interface IRouter {
 }
 
 const userMiddleware = new UserMiddleware();
+const cardMiddleware = new CardMiddleware();
+const userController = new UserController();
 
 export const Routes: IRouter[] = [
   {
     path: "/user/:id",
     method: HTTP_METHODS.GET,
-    action: new UserController().index,
+    action: userController.index,
     middlewares: [userMiddleware.findOneUser],
   },
   {
     path: "/user",
     method: HTTP_METHODS.POST,
-    action: new UserController().create,
+    action: userController.create,
     middlewares: [userMiddleware.createUser],
   },
   {
     path: "/user/firebase",
     method: HTTP_METHODS.POST,
-    action: new UserController().createUserInFirebase,
+    action: userController.createUserInFirebase,
     middlewares: [userMiddleware.createUser],
+  },
+  {
+    path: "/user/card",
+    method: HTTP_METHODS.GET,
+    action: userController.cards,
+    middlewares: [new AuthMiddleware().isAuthenticate],
   },
   {
     path: "/auth/facebook",
@@ -55,6 +63,17 @@ export const Routes: IRouter[] = [
     path: "/card",
     method: HTTP_METHODS.POST,
     action: new CardController().create,
-    middlewares: [new CardMiddleware().create],
+    middlewares: [cardMiddleware.create],
+  },
+  {
+    path: "/card/:id",
+    method: HTTP_METHODS.PUT,
+    action: new CardController().edit,
+    middlewares: [cardMiddleware.create],
+  },
+  {
+    path: "/card/:id",
+    method: HTTP_METHODS.DELETE,
+    action: new CardController().delete,
   },
 ];

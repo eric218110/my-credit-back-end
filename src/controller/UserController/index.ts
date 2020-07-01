@@ -1,8 +1,8 @@
 import { Response, Request } from "express";
-import { userService } from "../../services/UserServices";
 import { UserEntity } from "../../database/entitys/user.entity";
+import { cardService } from "../../services/CardServices";
+import { userService } from "../../services/UserServices";
 import { authService } from "../../services/AuthService";
-import { compare } from "bcryptjs";
 export class UserController {
   async index(request: Request, response: Response) {
     const { id } = request.params;
@@ -55,6 +55,16 @@ export class UserController {
       return (await userService.create(user)) as UserEntity;
     } else {
       return userExist;
+    }
+  }
+
+  async cards(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+
+      return response.json(await userService.all());
+    } catch (error) {
+      console.log("Erro find cards from person");
     }
   }
 }

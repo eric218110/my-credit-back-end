@@ -54,7 +54,7 @@ class UserService {
 
   async create(user: UserEntity): Promise<UserEntity | undefined> {
     this.singletonRepository();
-
+    user.cards = [];
     try {
       user.uid = user.password;
       return await this.userRepository.save(user);
@@ -95,6 +95,10 @@ class UserService {
         }
         return userEntity;
       });
+  }
+
+  async all() {
+    return this.userRepository.find();
   }
 }
 
