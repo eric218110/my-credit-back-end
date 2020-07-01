@@ -35,6 +35,38 @@ class CardService {
       return undefined;
     }
   }
+
+  async edit(card: CardEntity, id: string): Promise<boolean> {
+    this.singletonRepository();
+
+    try {
+      const update = await this.cardRepository.update({ id }, card);
+
+      if (update.affected !== undefined && update.affected > 0) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error);
+    }
+    return false;
+  }
+
+  async delete(id: string): Promise<boolean> {
+    this.singletonRepository();
+
+    try {
+      const update = await this.cardRepository.delete({ id });
+
+      if (update.affected !== undefined && update.affected) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error);
+    }
+    return false;
+  }
 }
 
 export const cardService = new CardService();

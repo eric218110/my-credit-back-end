@@ -37,5 +37,38 @@ export class CardController {
     }
   }
 
-  async getAllCard() {}
+  async edit(request: Request, response: Response) {
+    try {
+      const card = new CardEntity();
+      const id = request.params.id;
+      card.name = request.body.name;
+      card.number = request.body.number;
+      card.holderName = request.body.holderName;
+      card.flag = request.body.flag;
+      card.balance = request.body.balance;
+      card.backgroundColor = request.body.backgroundColor;
+
+      const update = await cardService.edit(card, id);
+
+      return update
+        ? response.json({ message: "card update", card })
+        : response.status(401).json({ error: "Not update" });
+    } catch (error) {
+      return response.status(401).json({ error: "Card note exist, not update" });
+    }
+  }
+
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+    try {
+      return (await cardService.delete(id))
+        ? response.json({ message: "card deleted" })
+        : response.status(401).json({ error: "Card note exist, not deleted" });
+    } catch (error) {
+      console.log(error);
+      return response.status(401).json({ error: "Not Delete" });
+    }
+  }
+
+  async getAllCard(request: Request, response: Response) {}
 }

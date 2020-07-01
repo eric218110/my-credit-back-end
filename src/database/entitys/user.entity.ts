@@ -1,5 +1,6 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, OneToMany } from "typeorm";
 import { MainEntity } from "./main";
+import { CardEntity } from "./card.entity";
 
 @Entity({ name: "user" })
 export class UserEntity extends MainEntity {
@@ -18,9 +19,12 @@ export class UserEntity extends MainEntity {
   @Column({ nullable: false, type: "character varying" })
   password!: string;
 
-  @Column({nullable: true, type:'character varying'})
+  @Column({ nullable: true, type: "character varying" })
   photoURL!: string;
 
-  @Column({nullable: false, type:'character varying'})
+  @Column({ nullable: false, type: "character varying" })
   token!: string;
+
+  @OneToMany(() => CardEntity, (card) => card.user)
+  cards!: CardEntity[];
 }

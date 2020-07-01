@@ -1,5 +1,6 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, ManyToMany, JoinColumn } from "typeorm";
 import { MainEntity } from "./main";
+import { UserEntity } from "./user.entity";
 
 @Entity({ name: "card" })
 export class CardEntity extends MainEntity {
@@ -24,4 +25,8 @@ export class CardEntity extends MainEntity {
 
   @Column({ nullable: true, type: "character varying" })
   backgroundColor?: string;
+
+  @ManyToMany(() => UserEntity, (user) => user.cards)
+  @JoinColumn()
+  user!: UserEntity;
 }
