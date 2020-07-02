@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToMany, JoinColumn } from "typeorm";
+import { Entity, Column, ManyToMany, JoinColumn, ManyToOne } from "typeorm";
 import { MainEntity } from "./main";
 import { UserEntity } from "./user.entity";
 
@@ -26,7 +26,6 @@ export class CardEntity extends MainEntity {
   @Column({ nullable: true, type: "character varying" })
   backgroundColor?: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.cards)
-  @JoinColumn()
+  @ManyToOne((type) => UserEntity, (userEntity: UserEntity) => userEntity.cards)
   user!: UserEntity;
 }

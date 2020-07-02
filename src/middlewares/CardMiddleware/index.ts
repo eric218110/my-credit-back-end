@@ -10,7 +10,6 @@ export class CardMiddleware {
       const holderName: string = request.body.holderName;
       const flag: string = request.body.flag;
       const balance: string = request.body.flag;
-      const backgroundColor: string = request.body.backgroundColor;
 
       const isEmpty = Validate.isEmpty([
         { field: name, fieldName: "Name" },
@@ -30,6 +29,15 @@ export class CardMiddleware {
       }
     } catch (error) {
       console.log("Erro: " + error);
+    }
+  }
+
+  existUserId(request: Request, response: Response, next: NextFunction) {
+    if (
+      request.headers.userid === undefined ||
+      request.headers.userid === ""
+    ) {
+      response.status(401).json({ error: "User not exist" });
     }
   }
 }

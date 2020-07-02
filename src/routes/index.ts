@@ -57,7 +57,10 @@ export const Routes: IRouter[] = [
     path: "/card",
     method: HTTP_METHODS.GET,
     action: new CardController().show,
-    middlewares: [new AuthMiddleware().isAuthenticate],
+    middlewares: [
+      new AuthMiddleware().isAuthenticate,
+      cardMiddleware.existUserId,
+    ],
   },
   {
     path: "/card",
