@@ -25,6 +25,11 @@ class UserService {
       });
   }
 
+  async findById(id: string): Promise<UserEntity | undefined> {
+    this.singletonRepository();
+    return await this.userRepository.findOne({ id });
+  }
+
   async findWithEmail(email: string): Promise<UserEntity | undefined> {
     this.singletonRepository();
 

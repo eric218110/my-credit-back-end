@@ -10,11 +10,14 @@ export class CardController {
   }
 
   async show(request: Request, response: Response) {
-    const cards = await cardService.show();
-    return response.json({ cards });
+    const userId = request.headers.userid?.toString();
+    const card = await cardService.show(userId!);
+    response.json({ card });
   }
 
   async create(request: Request, response: Response) {
+    const userId = request.headers.userid?.toString();
+    console.log(userId);
     try {
       const card = new CardEntity();
       card.name = request.body.name;
@@ -24,10 +27,19 @@ export class CardController {
       card.balance = request.body.balance;
       card.backgroundColor = request.body.backgroundColor;
 
-      const newCard = await cardService.create(card);
+      const newCard = await cardService.create(card, userId!);
 
       return newCard !== undefined
-        ? response.json(newCard)
+        ? response.json({
+            card: {
+              name: card.name,
+              number: card.number,
+              holderName: card.holderName,
+              flag: card.flag,
+              balance: card.balance,
+              backgroundColor: card.backgroundColor,
+            },
+          })
         : response.status(401).json({ erro: "Card not create" });
     } catch (error) {
       return response.status(401).json({
@@ -54,7 +66,9 @@ export class CardController {
         ? response.json({ message: "card update", card })
         : response.status(401).json({ error: "Not update" });
     } catch (error) {
-      return response.status(401).json({ error: "Card note exist, not update" });
+      return response
+        .status(401)
+        .json({ error: "Card note exist, not update" });
     }
   }
 

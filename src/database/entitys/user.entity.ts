@@ -25,6 +25,6 @@ export class UserEntity extends MainEntity {
   @Column({ nullable: false, type: "character varying" })
   token!: string;
 
-  @OneToMany(() => CardEntity, (card) => card.user)
+  @OneToMany((type) => CardEntity, (cardEntity: CardEntity) => cardEntity.user)
   cards!: CardEntity[];
 }

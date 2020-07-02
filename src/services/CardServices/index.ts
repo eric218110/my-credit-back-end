@@ -1,5 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 import { CardEntity } from "../../database/entitys/card.entity";
+import { userService } from "../UserServices";
 
 class CardService {
   private cardRepository!: Repository<CardEntity>;
@@ -10,10 +11,12 @@ class CardService {
     }
   }
 
-  async show(): Promise<CardEntity[] | undefined> {
+  async show(userId: string): Promise<CardEntity[] | undefined> {
     try {
       this.singletonRepository();
-      return await this.cardRepository.find();
+      return await this.cardRepository.find({
+        where: { user: { id: userId } },
+      });
     } catch (error) {
       console.log(error);
       return undefined;
@@ -26,10 +29,19 @@ class CardService {
     return await this.cardRepository.findOne({ id });
   }
 
-  async create(user: CardEntity): Promise<CardEntity | undefined> {
-    this.singletonRepository();
+  async create(
+    card: CardEntity,
+    userId: string
+  ): Promise<CardEntity | undefined> {
     try {
-      return await this.cardRepository.save(user);
+      this.singletonRepository();
+      const user = await userService.findById(userId);
+
+      if (user !== undefined) {
+        card.user = user;
+        return await this.cardRepository.save(card);
+      }
+      return undefined;
     } catch (error) {
       console.log(`Error create card: ${error.detail}`);
       return undefined;
