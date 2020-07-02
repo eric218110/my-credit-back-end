@@ -87,14 +87,8 @@ class UserService {
   async findByEmail(find: { email: string }): Promise<UserEntity | undefined> {
     const { email } = find;
     this.singletonRepository();
-    return await this.userRepository
-      .findOne({ email })
-      .then((userEntity: UserEntity | undefined) => {
-        if (userEntity !== undefined) {
-          firebaseAuth.getUserByEmail(email);
-        }
-        return userEntity;
-      });
+
+    return await this.userRepository.findOne({ email });
   }
 
   async all() {

@@ -14,14 +14,13 @@ export class AuthController {
     user.password = request.body.password;
     user.name = request.body.name;
     user.photoURL = request.body.photoURL;
-
     user.token = authService.generateToken(user.email);
 
     const userCreate = await userController.createUserWithFacebook(user);
 
     return response.json({
       user: {
-        id: user.id,
+        id: userCreate.id,
         email: userCreate.email,
         name: userCreate.name,
         photoURL: userCreate.photoURL,
